@@ -35,12 +35,13 @@ namespace WPF.MVC.Filters
                              p.Endpoint.ActionName == actionName &&
                              p.IsActive);
 
-                if (!hasPermission)
-                {
-                    // Yetki yoksa AccessDenied sayfasýna (veya Home'a) yönlendir
-                    context.Result = new RedirectToActionResult("Index", "Home", null);
-                }
-            
+            if (!hasPermission)
+            {
+                // Index yerine AccessDenied sayfasýna gönderiyoruz
+                context.Result = new RedirectToActionResult("AccessDenied", "User", null);
+                return;
+            }
+
 
             base.OnActionExecuting(context);
         }

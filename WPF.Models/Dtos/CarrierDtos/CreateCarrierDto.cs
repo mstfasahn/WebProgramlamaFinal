@@ -10,6 +10,6 @@ namespace WPF.Models.Dtos.Carrier
     public class CreateCarrierDto
     {
         [Required(ErrorMessage = "Kargo firmasý adý zorunludur.")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
     }
 }

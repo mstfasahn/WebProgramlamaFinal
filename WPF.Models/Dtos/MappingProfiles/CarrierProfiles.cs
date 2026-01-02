@@ -17,6 +17,7 @@ namespace WPF.Models.Dtos.MappingProfiles
             CreateMap<e.Carrier,CreateCarrierDto>().ReverseMap();
             CreateMap<e.Carrier, GetCarrierDto>();
             CreateMap<e.Carrier,UpdateCarrierDto>().ReverseMap();
+            CreateMap<GetCarrierDto, UpdateCarrierDto>().ReverseMap();
         }
     }
 }

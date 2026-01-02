@@ -9,7 +9,7 @@ namespace WPF.Models.Entities
     public class Carrier
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public  ICollection<OrderHeader> Orders { get; set; }
+        public string? Name { get; set; }
+        public  ICollection<OrderHeader>? Orders { get; set; }
     }
 }

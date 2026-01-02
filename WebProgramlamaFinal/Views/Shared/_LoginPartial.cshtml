@@ -5,7 +5,7 @@
 
 @{
     // Session'dan string veriyi alýp nesneye çeviriyoruz
-    var userJson = HttpContextAccessor.HttpContext.Session.GetString("CurrentUser");
+    var userJson = HttpContextAccessor?.HttpContext?.Session.GetString("CurrentUser");
     GetUserDto? currentUser = null;
 
     if (!string.IsNullOrEmpty(userJson))
