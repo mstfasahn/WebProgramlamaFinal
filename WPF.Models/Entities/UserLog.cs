@@ -10,9 +10,12 @@ namespace WPF.Models.Entities
     {
         public int Id { get; set; }
         public int? UserId { get; set; } // Giriþ yapmamýþsa null olabilir
+        public int EndpointId { get; set; }
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
         public string IpAddress { get; set; }
         public DateTime LogDate { get; set; } = DateTime.Now;
+
+        public  Endpoint Endpoint { get; set; }
     }
 }

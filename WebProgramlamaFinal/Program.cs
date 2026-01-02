@@ -24,6 +24,7 @@ builder.Services.AddSession(options => {
 //DI    
 builder.Services.AddScoped<ICarrierService, CarrierService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IUserLogginService, UserLogginService>();
 builder.Services.AddScoped<PermissionControlAttribute>();
 var app = builder.Build();

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WPF.Data;
 
@@ -11,9 +12,11 @@ using WPF.Data;
 namespace WPF.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260102204322_UserLoggingAdded")]
+    partial class UserLoggingAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -463,9 +466,6 @@ namespace WPF.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EndpointId")
-                        .HasColumnType("int");
-
                     b.Property<string>("IpAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -477,8 +477,6 @@ namespace WPF.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EndpointId");
 
                     b.ToTable("UserLogs");
                 });
@@ -659,17 +657,6 @@ namespace WPF.Data.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("State");
-                });
-
-            modelBuilder.Entity("WPF.Models.Entities.UserLog", b =>
-                {
-                    b.HasOne("WPF.Models.Entities.Endpoint", "Endpoint")
-                        .WithMany()
-                        .HasForeignKey("EndpointId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Endpoint");
                 });
 
             modelBuilder.Entity("WPF.Models.Entities.Carrier", b =>

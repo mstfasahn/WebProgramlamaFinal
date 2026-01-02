@@ -17,6 +17,7 @@ namespace WPF.Models.Dtos.MappingProfiles
             CreateMap<e.Category, CreateCategoryDto>().ReverseMap();
             CreateMap<e.Category, GetCategoryDto>();
             CreateMap<e.Category, UpdateCategoryDto>().ReverseMap();
+            CreateMap<GetCategoryDto, UpdateCategoryDto>().ReverseMap();
         }
     }
 }

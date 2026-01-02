@@ -8,7 +8,8 @@ using WPF.Services.Services;
 namespace WPF.MVC.Controllers
 {
     [ServiceFilter(typeof(PermissionControlAttribute))]
-    public class CarrierController(ICarrierService carrierService,IMapper mapper) : Controller
+    public class CarrierController
+        (ICarrierService carrierService,IMapper mapper,IUserLogginService logginService) : BaseController(logginService)
     {
         [HttpGet]
         public async Task<IActionResult> List()
@@ -24,7 +25,7 @@ namespace WPF.MVC.Controllers
             return View("List",carriers);
         }
         [HttpGet]
-        public async Task<IActionResult> Create() { return View(); }
+        public  IActionResult Create() { return View(); }
         [HttpPost]
         public async Task<IActionResult> Create(CreateCarrierDto dto)
         {
@@ -36,7 +37,8 @@ namespace WPF.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-           var carrier = await carrierService.GetCarrierByIdAsync(id);
+            if (id == 0) { return View("List", "Carrier"); }
+            var carrier = await carrierService.GetCarrierByIdAsync(id);
             var updateDto = mapper.Map<UpdateCarrierDto>(carrier);
             return View(updateDto);
         }
