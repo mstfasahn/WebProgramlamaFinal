@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using WPF.Data;
-
+using WPF.Models.Dtos.MappingProfiles;
 var builder = WebApplication.CreateBuilder(args);
 var ConnectionStrings = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -9,6 +10,13 @@ var ConnectionStrings = builder.Configuration.GetConnectionString("DefaultConnec
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(ConnectionStrings));
+builder.Services.AddAutoMapper(typeof(UserProfiles));
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,9 +33,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=User}/{action=Login}");
 
 app.Run();

@@ -1,0 +1,42 @@
+@using Microsoft.AspNetCore.Http
+@using System.Text.Json
+@using WPF.Models.Dtos.User
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    // Session'dan string veriyi alýp nesneye çeviriyoruz
+    var userJson = HttpContextAccessor.HttpContext.Session.GetString("CurrentUser");
+    GetUserDto? currentUser = null;
+
+    if (!string.IsNullOrEmpty(userJson))
+    {
+        currentUser = JsonSerializer.Deserialize<GetUserDto>(userJson);
+    }
+}
+
+<ul class="navbar-nav">
+    @if (currentUser != null)
+    {
+        @* Kullanýcý giriþ yapmýþsa *@
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-controller="Account" asp-action="Profile" title="Profilim">
+                Merhaba @currentUser.Name
+            </a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="nav-link btn btn-link text-white border-0">Çýkýþ Yap</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        @* Kullanýcý giriþ yapmamýþsa *@
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-controller="Account" asp-action="Register">Kayýt Ol</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-controller="Account" asp-action="Login">Giriþ Yap</a>
+        </li>
+    }
+</ul>

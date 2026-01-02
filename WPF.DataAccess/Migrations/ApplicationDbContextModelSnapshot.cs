@@ -134,6 +134,27 @@ namespace WPF.Data.Migrations
                     b.ToTable("Countries");
                 });
 
+            modelBuilder.Entity("WPF.Models.Entities.Endpoint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ControllerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Endpoints");
+                });
+
             modelBuilder.Entity("WPF.Models.Entities.OrderDetail", b =>
                 {
                     b.Property<int>("Id")
@@ -224,6 +245,32 @@ namespace WPF.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("OrderHeaders");
+                });
+
+            modelBuilder.Entity("WPF.Models.Entities.Permissions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EndpointId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EndpointId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("WPF.Models.Entities.Product", b =>
@@ -477,6 +524,25 @@ namespace WPF.Data.Migrations
                     b.Navigation("State");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WPF.Models.Entities.Permissions", b =>
+                {
+                    b.HasOne("WPF.Models.Entities.Endpoint", "Endpoint")
+                        .WithMany()
+                        .HasForeignKey("EndpointId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WPF.Models.Entities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Endpoint");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("WPF.Models.Entities.Product", b =>
