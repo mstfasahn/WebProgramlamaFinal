@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using WPF.Models.Dtos.City;
 
 namespace WPF.Models.Dtos.Country
 {
@@ -8,4 +9,6 @@ namespace WPF.Models.Dtos.Country
         public int Id { get; set; }
         public string Name { get; set; }
     }
+
+
 }

@@ -16,9 +16,9 @@ namespace WPF.Models.Dtos.User
         [Required(ErrorMessage = "Þifre zorunludur.")]
         [StringLength(20, MinimumLength = 6, ErrorMessage = "Þifre en az 6 karakter olmalýdýr.")]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
 
-        [Compare("Password", ErrorMessage = "Þifreler uyuþmuyor.")]
+        [Compare("PasswordHash", ErrorMessage = "Þifreler uyuþmuyor.")]
         public string ConfirmPassword { get; set; }
     }
 }

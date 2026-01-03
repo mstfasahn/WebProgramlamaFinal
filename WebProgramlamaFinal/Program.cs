@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using WPF.Data;
 using WPF.Models.Dtos.MappingProfiles;
 using WPF.MVC.Filters;
@@ -26,6 +27,11 @@ builder.Services.AddScoped<ICarrierService, CarrierService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IUserLogginService, UserLogginService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ICountryService,CountryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IEndpointServices, EndpointServices>();
 builder.Services.AddScoped<PermissionControlAttribute>();
 var app = builder.Build();
 
@@ -47,6 +53,15 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Carrier}/{action=List}");
+    pattern: "{controller=Product}/{action=PublicList}");
+app.UseStatusCodePagesWithReExecute("/Home/NotFoundPage");
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var endpointService = services.GetRequiredService<IEndpointServices>();
+
+    // Web projesinin kendi assembly bilgisini servise gönderiyoruz!
+    await endpointService.SeedEndpointsAsync(Assembly.GetExecutingAssembly());
+}
 app.Run();

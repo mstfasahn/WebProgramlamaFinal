@@ -9,5 +9,6 @@ namespace WPF.Models.Dtos.Product
     public class UpdateProductDto:CreateProductDto
     {
         public int Id { get; set; }
+        public List<string>? ExistingImageUrls { get; set; }
     }
 }

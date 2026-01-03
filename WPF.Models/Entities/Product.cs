@@ -18,6 +18,8 @@ namespace WPF.Models.Entities
         public double ListPrice { get; set; }
         public double Price { get; set; }
         public int CategoryId { get; set; }
+        public int UserId { get; set; }
+        public User? User { get; set; }
         public Category? Category { get; set; }
         public List<ProductImage>? ProductImages { get; set; }
     }

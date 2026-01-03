@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,5 +23,7 @@ namespace WPF.Models.Dtos.Product
         [Range(1, 10000)]
         public double Price { get; set; }
         public int CategoryId { get; set; }
+
+        public List<IFormFile>? ImageFiles { get; set; }
     }
 }

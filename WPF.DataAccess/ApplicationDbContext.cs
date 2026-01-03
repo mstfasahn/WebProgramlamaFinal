@@ -79,6 +79,13 @@ namespace WPF.Data
                 .WithMany()
                 .HasForeignKey(u => u.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            // Product ve User arasýndaki iliþkiyi yapýlandýrýyoruz
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.User)
+                .WithMany() // Eðer User içinde ICollection<Product> varsa buraya p => p.Products yazabilirsin
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
     }

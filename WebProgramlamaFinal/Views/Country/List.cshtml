@@ -1,0 +1,161 @@
+@model ListCountryVM
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-secondary bg-gradient py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Coðrafi Yönetim Paneli</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+
+        @* --- ARAMA BÖLÜMÜ --- *@
+        <form asp-action="Search" method="get" class="row g-3 mb-4 justify-content-center">
+            <div class="col-md-8">
+                <div class="input-group border rounded-pill overflow-hidden shadow-sm">
+                    <span class="input-group-text bg-white border-0 ps-4">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input type="text" name="SearchString" class="form-control border-0 py-2"
+                           placeholder="Ülke ismine göre arama yapýn..." value="@Model.SearchString" />
+                    <button class="btn btn-primary px-4" type="submit">Sorgula</button>
+                    @if (!string.IsNullOrEmpty(Model.SearchString))
+                    {
+                        <a asp-action="Search" class="btn btn-outline-danger border-0 d-flex align-items-center">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <a asp-action="Create" class="btn btn-success shadow-sm rounded-pill px-4">
+                    <i class="bi bi-plus-circle"></i> Yeni Ülke
+                </a>
+            </div>
+        </form>
+
+        @* --- ÜLKE TABLOSU --- *@
+        <div class="table-responsive">
+            <table class="table table-hover border align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 60px;"></th> @* Detay Butonu *@
+                        <th>Ülke Bilgisi</th>
+                        <th class="text-center">Þehir Sayýsý</th>
+                        <th class="text-end px-4">Yönetim</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Countries.Any())
+                    {
+                        @foreach (var item in Model.Countries)
+                        {
+                            @* ANA ÜLKE SATIRI *@
+                            <tr class="fw-semibold">
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-light border rounded-circle shadow-sm"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#countryDetail-@item.Id">
+                                        <i class="bi bi-chevron-down text-primary"></i>
+                                    </button>
+                                </td>
+                                <td class="fs-5">@item.Name</td>
+                                <td class="text-center">
+                                    <span class="badge rounded-pill bg-primary px-3">
+                                        @item.Cities.Count Þehir
+                                    </span>
+                                </td>
+                                <td class="text-end px-4">
+                                    <div class="btn-group shadow-sm rounded">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post"
+                                              onsubmit="return confirm('Sildikten sonra geri alamazsýnýz. Emin misiniz?')">
+                                            <button type="submit" class="btn btn-outline-danger border-start-0">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            @* --- AÇILIR ÞEHÝR LÝSTESÝ --- *@
+                            <tr class="collapse" id="countryDetail-@item.Id">
+                                <td colspan="4" class="bg-light p-0 border-top-0">
+                                    <div class="p-4 bg-white border mx-3 my-2 rounded shadow-inner">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="mb-0 text-primary fw-bold">
+                                                <i class="bi bi-geo-fill me-2"></i>@item.Name Baðlý Þehirler
+                                            </h6>
+                                        </div>
+
+                                        @if (item.Cities.Any())
+                                        {
+                                            <div class="row g-2">
+                                                @foreach (var city in item.Cities)
+                                                {
+                                                    <div class="col-md-4 col-lg-3">
+                                                        <div class="p-2 border rounded bg-light d-flex align-items-center shadow-sm">
+                                                            <div class="bg-white p-1 rounded-circle me-2 shadow-sm">
+                                                                <i class="bi bi-building text-info"></i>
+                                                            </div>
+                                                            <small class="text-dark">@city.Name</small>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="text-center py-3 text-muted fst-italic">
+                                                <i class="bi bi-info-circle me-1"></i> Bu ülkeye ait kayýtlý þehir bulunamadý.
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="bi bi-search fs-1 d-block mb-3"></i>
+                                    Aradýðýnýz kriterlere uygun ülke bulunamadý.
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@* --- CSS ÝLE GÖRSEL DOKUNUÞLAR --- *@
+@section Scripts {
+    <style>
+        .shadow-inner {
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .collapse.show {
+            border-left: 4px solid #0d6efd;
+            transition: 0.3s;
+        }
+
+        .btn-light:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.1);
+        }
+
+        [aria-expanded="true"] .bi-chevron-down {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+    </style>
+}

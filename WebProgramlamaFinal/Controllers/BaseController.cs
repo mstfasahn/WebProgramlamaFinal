@@ -25,7 +25,7 @@ namespace WPF.MVC.Controllers
             {
                 // Login olmamýþ kullanýcý logu
                 await loggingService.LogAsync(1, ReqController, ReqAction, ReqIp);
-                filterContext.Result = RedirectToAction("Login", "User");
+                await next();
                 return;
             }
 
@@ -34,6 +34,24 @@ namespace WPF.MVC.Controllers
 
             // Bu satýr asenkron akýþýn devam etmesini saðlar
             await next();
+
+
+        }
+
+        protected IActionResult RedirectToNotFound()
+        {
+            Response.StatusCode = 404;
+            return RedirectToAction("NotFoundPage", "Home");
+        }
+        protected IActionResult RedirectToAccessDenied()
+        {
+            Response.StatusCode = 403;
+            return RedirectToAction("AccessDenied", "Home");
+        }
+        protected IActionResult RedirectToLogin()
+        {
+            Response.StatusCode = 403;
+            return RedirectToAction("Login", "User");
         }
     }
 }

@@ -12,8 +12,8 @@ using WPF.Data;
 namespace WPF.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260102154120_AddedAuthEntitites2")]
-    partial class AddedAuthEntitites2
+    [Migration("20260103125357_UpdatededProductEntity")]
+    partial class UpdatededProductEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,6 @@ namespace WPF.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -309,9 +308,14 @@ namespace WPF.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Products");
                 });
@@ -451,6 +455,42 @@ namespace WPF.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("WPF.Models.Entities.UserLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ControllerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EndpointId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LogDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EndpointId");
+
+                    b.ToTable("UserLogs");
+                });
+
             modelBuilder.Entity("WPF.Models.Entities.City", b =>
                 {
                     b.HasOne("WPF.Models.Entities.Country", "Country")
@@ -556,7 +596,15 @@ namespace WPF.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WPF.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WPF.Models.Entities.ProductImage", b =>
@@ -627,6 +675,17 @@ namespace WPF.Data.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("State");
+                });
+
+            modelBuilder.Entity("WPF.Models.Entities.UserLog", b =>
+                {
+                    b.HasOne("WPF.Models.Entities.Endpoint", "Endpoint")
+                        .WithMany()
+                        .HasForeignKey("EndpointId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Endpoint");
                 });
 
             modelBuilder.Entity("WPF.Models.Entities.Carrier", b =>

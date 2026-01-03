@@ -32,20 +32,20 @@ namespace WPF.Services.Implementations
             return _mapper.Map<GetUserDto>(user);
         }
 
-        public async Task<bool> RegisterAsync(UserRegisterDto registerDto)
+        public async Task RegisterAsync(UserRegisterDto registerDto)
         {
             // Email kontrolü
             if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
-                return false;
+                return ;
 
             var user = _mapper.Map<User>(registerDto);
 
-            // Varsayılan bir rol atayabilirsin (Örn: Customer ID'si 2 ise)
+            // Varsayılan bir rol atayalım
             user.RoleId = 2;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return true;
+            return;
         }
 
         public Task LogoutAsync()

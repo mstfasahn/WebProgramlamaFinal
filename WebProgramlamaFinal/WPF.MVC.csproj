@@ -23,4 +23,8 @@
     <ProjectReference Include="..\WPF.Services\WPF.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Permission\" />
+  </ItemGroup>
+
 </Project>

@@ -1,10 +1,18 @@
 @using Microsoft.AspNetCore.Http
 @using WPF.Models.Dtos.User
+@using WPF.Models.Constants
+@using System.Text.Json @* JSON iþlemleri için eklendi *@
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
-    // Session'dan kullanýcý bilgisini alýyoruz
-    //var user = HttpContextAccessor.HttpContext.Session.GetObject<GetUserDto>("CurrentUser");
+    // 2. Yol: Manuel Deserialization (Hýzlý ve Kesin Çözüm)
+    var userJson = HttpContextAccessor.HttpContext.Session.GetString("CurrentUser");
+    GetUserDto user = null;
+
+    if (!string.IsNullOrEmpty(userJson))
+    {
+        user = JsonSerializer.Deserialize<GetUserDto>(userJson);
+    }
 }
 
 <!DOCTYPE html>
@@ -23,7 +31,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <a class="navbar-brand" asp-controller="Product" asp-action="PublicList">
                     <img src="/images/book.png" style="width:30px" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -33,11 +41,11 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                            <a class="nav-link text-white" asp-controller="Product" asp-action="PublicList">Ana Sayfa</a>
                         </li>
 
-                        @* Admin Paneli: Sadece Rolü Admin olanlar görebilir *@
-                        @*if (user != null && user.RoleName == "Admin")
+                        @* Admin Paneli Kontrolü *@
+                        @if (user != null && user.RoleId == (int)UserRole.Admin)
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,10 +69,9 @@
                             <a class="nav-link text-white" asp-controller="Cart" asp-action="Index">
                                 <i class="bi bi-cart"></i> &nbsp; Sepet
                             </a>
-                        </li>*@
+                        </li>
                     </ul>
-                     
-                    @* LoginPartial dosyasý sað üstteki Giriþ/Çýkýþ butonlarýný yönetir *@
+
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -77,20 +84,23 @@
         </main>
     </div>
 
-    <footer class="border-top footer bg-primary text-muted ">
-        <div class="text-center">
-            02.01.2026
+    <footer class="border-top footer bg-primary text-white">
+        <div class="text-center p-3">
+            &copy; 2026 - B2B Projesi
         </div>
     </footer>
+
+    @* Script Düzenlemeleri *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js" asp-append-version="true"></script>
-
-    <script src="https://cdn.tiny.cloud/1/g28lhnxtlihu4l4a381gw7tz47voznshwbi10lmsvlekrfme/tinymce/6/tinymce.min.js" referrerpolicy="origin">
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    @* TinyMCE Scripti Düzeltildi *@
+    <script src="https://cdn.tiny.cloud/1/g28lhnxtlihu4l4a381gw7tz47voznshwbi10lmsvlekrfme/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

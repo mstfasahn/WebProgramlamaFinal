@@ -6,6 +6,6 @@ namespace WPF.Services.Contracts
     {
         Task<GetUserDto?> LoginAsync(UserLoginDto loginDto);
         Task LogoutAsync();
-        Task<bool> RegisterAsync(UserRegisterDto registerDto);
+        Task RegisterAsync(UserRegisterDto registerDto);
     }
 }

@@ -1,0 +1,66 @@
+@model UserProfileDto
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-secondary bg-gradient py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white m-0"><i class="bi bi-person-badge"></i> Kullanýcý Profili</h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <div class="row">
+                @* Sol Taraf: Temel Bilgiler *@
+                <div class="col-md-6 border-end">
+                    <h4 class="text-primary mb-3 border-bottom pb-2">Kiþisel Bilgiler</h4>
+                    <div class="mb-3">
+                        <label class="fw-bold text-muted">Ad Soyad</label>
+                        <p class="fs-5">@Model.Name</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold text-muted">E-Posta</label>
+                        <p class="fs-5">@Model.Email</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold text-muted">Kullanýcý Rolü</label>
+                        <p><span class="badge bg-info text-dark">@Model.RoleName</span></p>
+                    </div>
+                </div>
+
+                @* Sað Taraf: Detaylý Adres Bilgileri *@
+                <div class="col-md-6 ps-md-4">
+                    <h4 class="text-primary mb-3 border-bottom pb-2">Adres Bilgileri</h4>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="fw-bold text-muted">Ülke</label>
+                            <p>@Model.CountryName</p>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="fw-bold text-muted">Þehir</label>
+                            <p>@Model.CityName</p>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="fw-bold text-muted">Ýlçe / Eyalet</label>
+                            <p>@Model.StateName</p>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="fw-bold text-muted">Açýk Adres</label>
+                            <p>@(string.IsNullOrEmpty(Model.StreetAddress) ? "Belirtilmemiþ" : Model.StreetAddress)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Alt Kýsým: Butonlar *@
+            <div class="card-footer bg-white border-0 text-center pt-4">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary px-4 me-2">
+                    <i class="bi bi-pencil-square"></i> Düzenle
+                </a>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary px-4">
+                    Ana Sayfa
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

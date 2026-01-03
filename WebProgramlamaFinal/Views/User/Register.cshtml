@@ -1,0 +1,56 @@
+@model UserRegisterDto
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-4">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="py-2 text-white">Kayýt Ol</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <form asp-action="Register" method="post" class="row">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Name" class="form-control border-0 shadow" placeholder="Ad Soyad" />
+                        <label asp-for="Name" class="ms-2 text-muted">Ad Soyad</label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Email" class="form-control border-0 shadow" placeholder="Email Adresi" />
+                        <label asp-for="Email" class="ms-2 text-muted">Email Adresi</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating py-2 col-6">
+                        <input asp-for="PasswordHash" type="password" class="form-control border-0 shadow" placeholder="Þifre" />
+                        <label asp-for="PasswordHash" class="ms-2 text-muted">Þifre</label>
+                        <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating py-2 col-6">
+                        <input asp-for="ConfirmPassword" type="password" class="form-control border-0 shadow" placeholder="Þifre Tekrar" />
+                        <label asp-for="ConfirmPassword" class="ms-2 text-muted">Þifre Tekrar</label>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 pt-3">
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">Kayýt Ol</button>
+                    </div>
+
+                    <div class="col-12 text-center mt-3">
+                        <p>Zaten hesabýnýz var mý? <a asp-action="Login" class="text-primary fw-bold">Giriþ Yap</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

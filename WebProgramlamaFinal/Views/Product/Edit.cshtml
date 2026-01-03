@@ -1,0 +1,28 @@
+@model UpdateProductVM
+
+<form method="post" enctype="multipart/form-data">
+    @* ID mutlaka gizli alan olarak kalmalý *@
+    <input asp-for="Product.Id" hidden />
+
+    <div class="form-floating py-2 col-12">
+        <input asp-for="Product.Title" class="form-control border-0 shadow" />
+        <label asp-for="Product.Title" class="ms-2">Ürün Baþlýðý</label>
+    </div>
+
+    @* KATEGORÝ DROPDOWN (VM'den gelen liste) *@
+    <div class="form-floating py-2 col-12">
+        <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
+            <option disabled selected>-- Kategori Seçiniz --</option>
+        </select>
+        <label asp-for="Product.CategoryId" class="ms-2">Kategori</label>
+    </div>
+
+    @* Resim Yükleme Alaný *@
+    <div class="py-2 col-12">
+        <input type="file" name="Product.ImageFiles" class="form-control border-0 shadow" multiple />
+    </div>
+
+    @* ... Diðer alanlar ... *@
+
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>

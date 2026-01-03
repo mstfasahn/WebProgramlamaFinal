@@ -15,7 +15,13 @@ namespace WPF.Models.Dtos.MappingProfiles
         public ProductProfiles()
         {
             CreateMap<e.Product, CreateProductDto>().ReverseMap();
-            CreateMap<e.Product, GetProductDto>();
+            CreateMap<e.Product, GetProductDto>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src =>
+                src.ProductImages != null && src.ProductImages.Any()
+                ? src.ProductImages.FirstOrDefault().ImageUrl
+                : "/images/no-image.png"))
+                .ReverseMap();
             CreateMap<e.Product, UpdateProductDto>().ReverseMap();
         }
     }

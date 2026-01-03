@@ -1,0 +1,86 @@
+@model UserProfileDto
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group mb-3">
+        <label>Ülke</label>
+        <select id="CountryId" class="form-select" asp-items="ViewBag.CountryList">
+            <option value="">-- Ülke Seçiniz --</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Þehir</label>
+        <select id="CityId" asp-for="CityId" class="form-select">
+            <option value="">-- Önce Ülke Seçiniz --</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Ýlçe / Eyalet</label>
+        <select id="StateId" asp-for="StateId" class="form-select">
+            <option value="">-- Önce Þehir Seçiniz --</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Ülke deðiþince Þehirleri getir
+            $('#CountryId').change(function () {
+                var countryId = $(this).val();
+                $('#CityId').empty().append('<option value="">Yükleniyor...</option>');
+                $('#StateId').empty().append('<option value="">-- Önce Þehir Seçiniz --</option>');
+
+                if (countryId) {
+                    $.getJSON('/api/Address/GetCities/' + countryId, function (data) {
+                        $('#CityId').empty().append('<option value="">-- Þehir Seçiniz --</option>');
+                        $.each(data, function (i, item) {
+                            $('#CityId').append('<option value="' + item.id + '">' + item.name + '</option>');
+                        });
+                    });
+                }
+            });
+
+            // Þehir deðiþince Ýlçeleri getir
+            $('#CityId').change(function () {
+                var cityId = $(this).val();
+                $('#StateId').empty().append('<option value="">Yükleniyor...</option>');
+
+                if (cityId) {
+                    $.getJSON('/api/Address/GetStates/' + cityId, function (data) {
+                        $('#StateId').empty().append('<option value="">-- Ýlçe Seçiniz --</option>');
+                        $.each(data, function (i, item) {
+                            $('#StateId').append('<option value="' + item.id + '">' + item.name + '</option>');
+                        });
+                    });
+                }
+            });
+        });
+
+                $(document).ready(function () {
+            // Sayfa ilk açýldýðýnda eðer Model'de CityId ve StateId varsa onlarý tetikle
+            var existingCityId = '@Model.CityId';
+            var existingStateId = '@Model.StateId';
+            var existingCountryId = '@Model.CountryId'; // DTO'na CountryId eklemeyi unutma
+
+            if(existingCountryId > 0) {
+                // Ülkeye göre þehirleri yükle ve mevcut þehri seç
+                loadCities(existingCountryId, existingCityId);
+            }
+
+            if(existingCityId > 0) {
+                // Þehre göre ilçeleri yükle ve mevcut ilçeyi seç
+                loadStates(existingCityId, existingStateId);
+            }
+        });
+
+        // AJAX fonksiyonlarýný dýþarý alarak tekrar kullanýlabilir yapabilirsin
+        function loadCities(countryId, selectedCityId) { ... }
+        function loadStates(cityId, selectedStateId) { ... }
+    </script>
+}
