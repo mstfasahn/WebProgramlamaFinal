@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using WPF.Models.Dtos.User;
-using WPF.MVC.ViewModels;
+using WPF.MVC.ViewModels.Product;
 using WPF.Services.Contracts;
 using WPF.Services.Services;
 

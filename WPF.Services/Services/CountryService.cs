@@ -15,9 +15,11 @@ namespace WPF.Services.Services
 {
     public class CountryService(ApplicationDbContext dbContext, IMapper mapper) : ICountryService
     {
-        public async Task<IEnumerable<Country>> GetCountriesAsync()
+        public async Task<IEnumerable<GetCountryDto>> GetCountriesAsync()
         {
-            return await dbContext.Countries.AsNoTracking().ToListAsync();
+            var countries= await dbContext.Countries.AsNoTracking().ToListAsync();
+            var countryDto= mapper.Map<IEnumerable<GetCountryDto>>(countries);
+            return countryDto;
         }
 
         public async Task<IEnumerable<ListCountryDto>> SearchCountry(string searchString)

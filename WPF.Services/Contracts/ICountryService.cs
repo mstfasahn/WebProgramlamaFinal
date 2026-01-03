@@ -8,7 +8,7 @@ namespace WPF.Services.Contracts
     {
         Task<GetCountryDto> CreateCountryAsync(CreateCountryDto dto);
         Task DeleteCountryAsync(int id);
-        Task<IEnumerable<Country>> GetCountriesAsync();
+        Task<IEnumerable<GetCountryDto>> GetCountriesAsync();
         Task<IEnumerable<ListCountryDto>> GetCountriesWCitiesAsync();
         Task<GetCountryDto> GetCountryByIdAsync(int id);
         Task<IEnumerable<ListCountryDto>> SearchCountry(string searchString);

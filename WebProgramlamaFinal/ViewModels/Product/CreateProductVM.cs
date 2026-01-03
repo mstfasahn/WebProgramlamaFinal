@@ -2,7 +2,7 @@ using WPF.Models.Dtos.Category;
 using WPF.Models.Dtos.Product;
 using WPF.Models.Entities;
 
-namespace WPF.MVC.ViewModels
+namespace WPF.MVC.ViewModels.Product
 {
     public class CreateProductVM
     {

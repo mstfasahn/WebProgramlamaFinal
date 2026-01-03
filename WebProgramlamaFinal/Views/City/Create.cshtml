@@ -1,1 +1,52 @@
+@model CreateCityVM
 
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-secondary bg-gradient py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Yeni Þehir Oluþtur</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" class="row">
+            <div class="border p-3">
+                @* Ülke Seçimi (Dropdown) *@
+                <div class="form-floating py-2 col-12">
+                    <select asp-for="City.CountryId" asp-items="@Model.CountryList" class="form-select border-0 shadow">
+                        <option disabled selected>-- Ülke Seçiniz --</option>
+                    </select>
+                    <label asp-for="City.CountryId" class="ms-2">Ülke</label>
+                    <span asp-validation-for="City.CountryId" class="text-danger"></span>
+                </div>
+
+                @* Þehir Adý *@
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="City.Name" class="form-control border-0 shadow" placeholder="Þehir Adý" />
+                    <label asp-for="City.Name" class="ms-2">Þehir Adý</label>
+                    <span asp-validation-for="City.Name" class="text-danger"></span>
+                </div>
+
+                @* Posta Kodu *@
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="City.PostalCode" class="form-control border-0 shadow" placeholder="Posta Kodu" />
+                    <label asp-for="City.PostalCode" class="ms-2">Posta Kodu</label>
+                    <span asp-validation-for="City.PostalCode" class="text-danger"></span>
+                </div>
+
+                <div class="row pt-2">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-primary form-control">Oluþtur</button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a asp-action="List" class="btn btn-outline-primary border form-control">Listeye Dön</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

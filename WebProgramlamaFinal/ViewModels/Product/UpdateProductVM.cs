@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using WPF.Models.Dtos.Category;
 using WPF.Models.Dtos.Product;
 
-namespace WPF.MVC.ViewModels
+namespace WPF.MVC.ViewModels.Product
 {
     public class UpdateProductVM
     {
