@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using WPF.Models.Dtos.MappingProfiles;
 using WPF.Models.Dtos.User;
+using WPF.MVC.Filters;
 using WPF.MVC.ViewModels;
 using WPF.Services.Contracts;
 using WPF.Services.Implementations;
@@ -11,7 +12,12 @@ using WPF.Services.Implementations;
 namespace WPF.MVC.Controllers
 {
     public class UserController
-        (IAuthService authService,IUserService userService,IMapper mapper,ICountryService countryService, IRoleService roleService) : Controller
+        (IAuthService authService,
+        IUserService userService,
+        IMapper mapper,
+        ICountryService countryService,
+        IRoleService roleService,
+        IUserLogginService logging) : BaseController(logging)
     {
         [HttpGet]
         public async Task<IActionResult> Profile()
@@ -21,9 +27,8 @@ namespace WPF.MVC.Controllers
 
             var currentUser = JsonConvert.DeserializeObject<GetUserDto>(userJson);
 
-            
-            var user = await userService.GetUserByIdAsync(currentUser.Id);
-            if (user == null) return NotFound();
+            var user = await userService.GetUserByIdForProfileAsync(currentUser.Id);
+            if (user == null) return RedirectToNotFound();
 
             return View(user);
         }
@@ -47,7 +52,7 @@ namespace WPF.MVC.Controllers
                 var userJson = System.Text.Json.JsonSerializer.Serialize(userDto);
                 HttpContext.Session.SetString("CurrentUser", userJson);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Profile", "User");
             }
 
             ModelState.AddModelError("", "E-posta veya þifre hatalý.");
@@ -77,7 +82,7 @@ namespace WPF.MVC.Controllers
         {
             HttpContext.Session.Clear();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("PublicList", "Product");
         }
 
         [HttpGet]
@@ -96,7 +101,7 @@ namespace WPF.MVC.Controllers
             //2. Id'ler uyuþmazsa reddet
             if (id != 0 && id != currentUser.Id)
             {
-                return RedirectToAction("AccessDenied", "User");
+                return RedirectToAccessDenied();
             }
 
             // 3. Veriyi getir (id 0 ise kendi profilini getirir)
@@ -129,7 +134,7 @@ namespace WPF.MVC.Controllers
             }
             catch (UnauthorizedAccessException)
             {
-                return RedirectToAction("AccessDenied", "User");
+                return RedirectToAccessDenied();
             }
         }
         
@@ -145,7 +150,7 @@ namespace WPF.MVC.Controllers
             if (id <= 0)
             {
                 TempData["error"] = "Geçersiz kullanýcý ID'si.";
-                return RedirectToAction("AccessDenied", "User");
+                return RedirectToAccessDenied();
             }
             var currentUser = JsonConvert.DeserializeObject<GetUserDto>(userJson);
 
@@ -160,6 +165,7 @@ namespace WPF.MVC.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(PermissionControlAttribute))]
         public async Task<IActionResult> List(string? nameSearch, string? emailSearch, int? roleId) 
         {
             var users =await userService.GetAllUserWithRoles();
@@ -172,7 +178,7 @@ namespace WPF.MVC.Controllers
             if (roleId.HasValue)
                 users = users.Where(u => u.RoleId == roleId);
 
-            var roles = await roleService.GetRoles();
+            var roles = await roleService.GetRolesAsync();
 
             ListUserVM ListVM = new ListUserVM
             {

@@ -9,8 +9,10 @@ namespace WPF.MVC.Controllers
 {
     [ServiceFilter(typeof(PermissionControlAttribute))]
     public class CarrierController
-        (ICarrierService carrierService,IMapper mapper,IUserLogginService logginService) : BaseController(logginService)
-    {
+        (ICarrierService carrierService,
+        IMapper mapper,
+        IUserLogginService logginService) : BaseController(logginService)
+        {
         [HttpGet]
         public async Task<IActionResult> List()
         {
@@ -52,7 +54,7 @@ namespace WPF.MVC.Controllers
             return RedirectToAction("List","Carrier");
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             await carrierService.DeleteCarrierAsync(id);

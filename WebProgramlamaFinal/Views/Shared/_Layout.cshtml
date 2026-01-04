@@ -52,11 +52,18 @@
                                     Ýçerik Yönetimi
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Category" asp-action="Index">Kategoriler</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Product" asp-action="Index">Ürünler</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Company" asp-action="Index">Þirketler</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Carrier" asp-action="List">Kargo Þirketleri</a></li>
+
+                                    <li><a class="dropdown-item" asp-controller="Category" asp-action="List">Kategoriler</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Product" asp-action="ManagementList">Ürünler</a></li>
+                                    <li><a class="dropdown-item" asp-controller="City" asp-action="List">Þehirler</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Country" asp-action="List">Ülkeler</a></li>
+                                    <li><a class="dropdown-item" asp-controller="State" asp-action="List">Ýlçeler</a></li>
+
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Index">Kullanýcý Yönetimi</a></li>
+                                    <li><a class="dropdown-item" asp-controller="User" asp-action="List">Kullanýcý Yönetimi</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Permission" asp-action="Manage">Yetki Yönetimi</a></li>
+
                                 </ul>
                             </li>
                         }
@@ -86,7 +93,7 @@
 
     <footer class="border-top footer bg-primary text-white">
         <div class="text-center p-3">
-            &copy; 2026 - B2B Projesi
+            02.01.2026
         </div>
     </footer>
 

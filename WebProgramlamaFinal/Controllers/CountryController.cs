@@ -1,12 +1,17 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WPF.Models.Dtos.Country;
+using WPF.MVC.Filters;
 using WPF.MVC.ViewModels;
 using WPF.Services.Contracts;
 
 namespace WPF.MVC.Controllers
 {
-    public class CountryController(ICountryService countryService,IUserLogginService logging,IMapper mapper) : BaseController(logging)
+    [ServiceFilter(typeof(PermissionControlAttribute))]
+
+    public class CountryController(ICountryService countryService,
+        IUserLogginService logging,
+        IMapper mapper) : BaseController(logging)
     {
         [HttpGet]
         public async Task<IActionResult> List()

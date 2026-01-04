@@ -21,7 +21,12 @@ namespace WPF.MVC.Filters
             }
 
             var user = JsonSerializer.Deserialize<GetUserDto>(userJson);
-
+            //Admin ise hýzlýca devam edebilir
+            if (user.RoleId == 1)
+            {
+                base.OnActionExecuting(context);
+                return;
+            }
             // 2. Gidilmek istenen Controller ve Action adlarýný yakala
             var controllerName = context.RouteData.Values["controller"]?.ToString();
             var actionName = context.RouteData.Values["action"]?.ToString();

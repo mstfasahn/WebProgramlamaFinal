@@ -2,11 +2,14 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WPF.Models.Dtos.City;
+using WPF.MVC.Filters;
 using WPF.MVC.ViewModels.City;
 using WPF.Services.Contracts;
 
 namespace WPF.MVC.Controllers
 {
+    [ServiceFilter(typeof(PermissionControlAttribute))]
+
     public class CityController
         (ICityServices cityServices,
         IMapper mapper,
@@ -35,7 +38,7 @@ namespace WPF.MVC.Controllers
 
             vm.Cities = cities;
             vm.CountryList = SLICoumtries;
-            return View(vm);
+            return View("List",vm);
         }
 
         [HttpGet]

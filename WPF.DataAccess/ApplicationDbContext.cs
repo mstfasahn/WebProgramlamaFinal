@@ -28,7 +28,7 @@ namespace WPF.Data
         public DbSet<City> Cities { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-        public DbSet<Permissions> Permissions { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
         public DbSet<Endpoint> Endpoints { get; set; }
         public DbSet<UserLog> UserLogs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

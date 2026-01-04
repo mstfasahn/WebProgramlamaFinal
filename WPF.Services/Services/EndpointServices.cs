@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,11 +8,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using WPF.Data;
+using WPF.Models.Dtos.EndpointDtos;
 using WPF.Models.Entities;
 using WPF.Services.Contracts;
 namespace WPF.Services.Services
 {
-    public class EndpointServices(ApplicationDbContext _dbContext) : IEndpointServices
+    public class EndpointServices(ApplicationDbContext dbContext,IMapper mapper) : IEndpointServices
     {
         public async Task SeedEndpointsAsync(Assembly webAssembly)
         {
@@ -32,12 +34,12 @@ namespace WPF.Services.Services
                 foreach (var action in actions)
                 {
                     var actionName = action.Name;
-                    var exists = await _dbContext.Endpoints.AnyAsync(e =>
+                    var exists = await dbContext.Endpoints.AnyAsync(e =>
                         e.ControllerName == controllerName && e.ActionName == actionName);
 
                     if (!exists)
                     {
-                        _dbContext.Endpoints.Add(new Endpoint
+                        dbContext.Endpoints.Add(new Endpoint
                         {
                             ControllerName = controllerName,
                             ActionName = actionName
@@ -45,7 +47,20 @@ namespace WPF.Services.Services
                     }
                 }
             }
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ListEndpointDto>> GetEndpointsWIncludesAsync()
+        {
+            var endpoints= await dbContext.Endpoints.Include(e=>e.Permissions).ToListAsync();
+            var listEndpointDto = mapper.Map<IEnumerable<ListEndpointDto>>(endpoints); 
+            return listEndpointDto;
+        }
+        public async Task<IEnumerable<GetEndpointDto>> GetEndpointsAsync()
+        {
+            var endpoints = await dbContext.Endpoints.Include(e => e.Permissions).ToListAsync();
+            var endpointList = mapper.Map<IEnumerable<GetEndpointDto>>(endpoints);
+            return endpointList;
         }
     }
 }

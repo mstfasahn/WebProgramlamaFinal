@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace WPF.Models.Entities
 {
-    public class Permissions
+    public class Permission
     {
         public int Id { get; set; }
         public int EndpointId { get; set; }
         public int RoleId { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = false;
         public Endpoint? Endpoint { get; set; }
         public Role? Role { get; set; }
     }

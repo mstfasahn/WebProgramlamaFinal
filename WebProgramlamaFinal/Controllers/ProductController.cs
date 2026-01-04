@@ -1,8 +1,10 @@
 using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using WPF.Models.Dtos.User;
+using WPF.MVC.Filters;
 using WPF.MVC.ViewModels.Product;
 using WPF.Services.Contracts;
 using WPF.Services.Services;
@@ -16,10 +18,16 @@ namespace WPF.MVC.Controllers
         IUserLogginService logging) : BaseController(logging)
     {
         [HttpGet]
-        public IActionResult Create() { return View(); }
+        [ServiceFilter(typeof(PermissionControlAttribute))]
+        public async  Task<IActionResult> Create() 
+        {
+            var categories= await categoryService.GetCategoryAsync();
+            var vm = new CreateProductVM { Categories = categories };
+            return View(vm); 
+        }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(PermissionControlAttribute))]
         public async Task<IActionResult> Create(CreateProductVM vm)
         {
             // 1. Session'dan kullanýcýyý al
@@ -35,7 +43,7 @@ namespace WPF.MVC.Controllers
                 await productService.CreateProductAsync(vm.CreateProductDto, currentUser.Id);
 
                 TempData["success"] = "Ürün baþarýyla eklendi.";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("PublicList");
             }
 
             vm.Categories = await categoryService.GetCategoryAsync();
@@ -43,6 +51,7 @@ namespace WPF.MVC.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(PermissionControlAttribute))]
         public async Task<IActionResult> ManagementList()
         {
             var userJson = HttpContext.Session.GetString("CurrentUser");
@@ -51,10 +60,16 @@ namespace WPF.MVC.Controllers
             if (string.IsNullOrEmpty(currentUser.ToString())) { return RedirectToAction("Login", "User"); }
 
             var result = await userService.IsAValidRequest(currentUser.Id,currentUser.RoleId);
-            if (!result) { return RedirectToAction("AccessDenied", "User"); }
+            if (!result) { return RedirectToAccessDenied(); }
 
             var products = await productService.GetManagementProductsAsync(currentUser.Id,currentUser.RoleId);
-            return View(products);
+            var categories = await categoryService.GetCategoryAsync();
+            var vm = new ManagementProductListVM 
+            {
+                Products = products,
+                Categories= categories
+            };
+            return View(vm);
         }
 
         [HttpGet]
@@ -65,13 +80,14 @@ namespace WPF.MVC.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(PermissionControlAttribute))]
         public async Task<IActionResult> Edit(int id) 
         {
             var userJson = HttpContext.Session.GetString("CurrentUser");
             if (string.IsNullOrEmpty(userJson)) return RedirectToAction("Login", "User");
             var currentUser = JsonConvert.DeserializeObject<GetUserDto>(userJson);
             var result = await userService.IsAValidRequest(currentUser.Id,currentUser.RoleId);
-            if (!result) { return RedirectToAction("AccessDenied", "User"); }
+            if (!result) { return RedirectToAccessDenied(); }
             var product =await productService.GetProductForUpdateAsync(id,currentUser.Id,currentUser.RoleId);
 
             if (product == null) { return RedirectToNotFound(); }
@@ -88,7 +104,9 @@ namespace WPF.MVC.Controllers
             };
             return View(viewModel);
         }
+
         [HttpPost]
+        [ServiceFilter(typeof(PermissionControlAttribute))]
         public async Task<IActionResult> Edit(UpdateProductVM vm) 
         {
             if (ModelState.IsValid)
@@ -109,6 +127,7 @@ namespace WPF.MVC.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(PermissionControlAttribute))]
         public async Task<IActionResult> Delete(int id) 
         {
             var userJson = HttpContext.Session.GetString("CurrentUser");

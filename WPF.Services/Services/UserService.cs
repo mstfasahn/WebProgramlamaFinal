@@ -17,6 +17,18 @@ namespace WPF.Services.Services
     public class UserService(ApplicationDbContext dbContext, IMapper mapper) : IUserService
     {
 
+        public async Task<UserProfileDto> GetUserProfile(int id)
+        {
+            var user = await dbContext.Users
+                .Include(u => u.Role)
+                .Include(u => u.Company)
+                .Include(u => u.State).ThenInclude(s => s.City).ThenInclude(c => c.Country)
+                .FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null) { return new UserProfileDto(); }
+            var profileDto = mapper.Map<UserProfileDto>(user);
+            return profileDto;
+        }
+
         public async Task<UserProfileDto> GetUserByIdForProfileAsync(int id)
         {
             var user = await dbContext.Users

@@ -1,0 +1,41 @@
+@model CreateStateVM
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-secondary bg-gradient py-3">
+        <h2 class="text-white text-center py-2">Yeni Ýlçe Oluþtur</h2>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" class="row">
+            <div class="border p-3 rounded bg-light">
+                @* Þehir Seçimi *@
+                <div class="form-floating py-2 col-12">
+                    <select asp-for="State.CityId" asp-items="@Model.Cities" class="form-select border-0 shadow">
+                        <option disabled selected>-- Lütfen Þehir Seçiniz --</option>
+                    </select>
+                    <label asp-for="State.CityId" class="ms-2">Þehir</label>
+                    <span asp-validation-for="State.CityId" class="text-danger"></span>
+                </div>
+
+                @* Ýlçe Adý *@
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="State.Name" class="form-control border-0 shadow" placeholder="Ýlçe Adý" />
+                    <label asp-for="State.Name" class="ms-2">Ýlçe Adý</label>
+                    <span asp-validation-for="State.Name" class="text-danger"></span>
+                </div>
+
+                <div class="row pt-3">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-primary form-control shadow">Kaydet</button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a asp-action="List" class="btn btn-outline-secondary form-control shadow">Ýptal</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

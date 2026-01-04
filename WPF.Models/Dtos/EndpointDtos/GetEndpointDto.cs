@@ -4,15 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WPF.Models.Entities
+namespace WPF.Models.Dtos.EndpointDtos
 {
-    public class Endpoint
+    public class GetEndpointDto
     {
         public int Id { get; set; }
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
-
-        public ICollection<Permission>? Permissions { get; set; }
-
     }
 }

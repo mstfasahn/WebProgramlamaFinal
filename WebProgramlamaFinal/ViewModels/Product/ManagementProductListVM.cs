@@ -5,12 +5,10 @@ using WPF.Models.Entities;
 
 namespace WPF.MVC.ViewModels.Product
 {
-    public class CreateProductVM
+    public class ManagementProductListVM
     {
         [ValidateNever]
         public IEnumerable<GetCategoryDto> Categories { get; set; } = new List<GetCategoryDto>();
-        public CreateProductDto CreateProductDto { get; set; } = new CreateProductDto();
-        [ValidateNever]
-        public ProductImage ProductImage { get; set; } = new ProductImage();
+        public IEnumerable<GetProductDto> Products { get; set; } =Enumerable.Empty<GetProductDto>();
     }
 }

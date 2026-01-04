@@ -1,0 +1,114 @@
+@model ListPermissionVM
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
+@* 1. Güvenlik Token'ýný alýyoruz *@
+@{
+    var tokens = Antiforgery.GetAndStoreTokens(Context);
+}
+
+<div class="card shadow border-0 my-4">
+    @* ... (Header kýsýmlarý ayný kalsýn) ... *@
+    <div class="card-body p-4">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="min-width: 250px;">Endpoint (Controller / Action)</th>
+                        @foreach (var role in Model.Roles)
+                        {
+                            @* Test için ID'yi baþlýða yazdýr: *@
+                            <th class="text-center">@role.Name <br /><small>(ID: @role.Id)</small></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var endpoint in Model.Endpoints)
+                    {
+                        <tr>
+                            <td>
+                                @* ... (Endpoint isimleri ayný) ... *@
+                                <span class="text-muted small d-block">@endpoint.ControllerName</span>
+                                <strong class="text-dark">@endpoint.ActionName</strong>
+                            </td>
+
+                            @foreach (var role in Model.Roles)
+                            {
+                                var hasPermission = Model.Permissions
+                                .Any(p => p.RoleId == role.Id && p.EndpointId == endpoint.Id && p.IsActive);
+
+                                <td class="text-center">
+                                    <div class="form-check form-switch d-inline-block">
+                                        @* data-role-id deðerini kontrol et *@
+                                        <input class="form-check-input permission-switch"
+                                               type="checkbox"
+                                               role="switch"
+                                               data-role-id="@role.Id"
+                                               data-endpoint-id="@endpoint.Id"
+                                               @(hasPermission ? "checked" : "")
+                                               @(role.Id == 1 ? "disabled checked" : "")>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".permission-switch").on('change', function () {
+                var checkbox = $(this);
+
+                // .data() yerine .attr() kullanarak doðrudan HTML'den oku (Cache hatasýný önler)
+                var rId = checkbox.attr("data-role-id");
+                var eId = checkbox.attr("data-endpoint-id");
+                var active = checkbox.is(":checked");
+
+                // Antiforgery Token (Metot 400 Bad Request almasýn diye)
+                var requestToken = "@tokens.RequestToken";
+
+                $.ajax({
+                    url: '/Permission/UpdatePermission', // URL'yi PermissionController ismine göre güncelledik
+                    type: 'POST',
+                    headers: {
+                        "RequestVerificationToken": requestToken
+                    },
+                    data: {
+                        roleId: rId,
+                        endpointId: eId,
+                        isActive: active
+                    },
+                    success: function (response) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            timerProgressBar: true
+                        });
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Yetki güncellendi'
+                        });
+                    },
+                    error: function (xhr) {
+                        // Hata durumunda checkbox'ý eski haline çek
+                        checkbox.prop('checked', !active);
+
+                        // Konsola hatayý yazdýr ki 404 mü 400 mü görelim
+                        console.error("Hata Detayý:", xhr.responseText);
+
+                        Swal.fire('Hata!', 'Yetki güncellenemedi. Durum: ' + xhr.status, 'error');
+                    }
+                });
+            });
+        });
+    </script>
+}

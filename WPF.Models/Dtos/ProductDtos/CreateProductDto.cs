@@ -8,22 +8,37 @@ using System.Threading.Tasks;
 
 namespace WPF.Models.Dtos.Product
 {
+    using Microsoft.AspNetCore.Http;
+    using System.ComponentModel.DataAnnotations;
+
     public class CreateProductDto
     {
-        [Required(ErrorMessage = "Baþlýk zorunludur.")]
+        [Required(ErrorMessage = "Ürün baþlýðý zorunludur.")]
+        [Display(Name = "Ürün Adý")]
         public string Title { get; set; }
-        [Required(ErrorMessage = "Açýklama zorunludur.")]
+
+        [Required(ErrorMessage = "Açýklama alaný boþ býrakýlamaz.")]
         public string Description { get; set; }
-        [Required(ErrorMessage = "ISBN zorunludur.")]
+
+        [Required(ErrorMessage = "ISBN alaný zorunludur.")]
         public string ISBN { get; set; }
-        [Required(ErrorMessage = "Yazar zorunludur.")]
+
+        [Required(ErrorMessage = "Yazar bilgisi zorunludur.")]
         public string Author { get; set; }
-        [Range(1, 10000)]
+
+        [Required(ErrorMessage = "Liste fiyatý zorunludur.")]
+        [Range(1, 50000, ErrorMessage = "Fiyat 1 ile 50.000 arasýnda olmalýdýr.")]
         public double ListPrice { get; set; }
-        [Range(1, 10000)]
+
+        [Required(ErrorMessage = "Satýþ fiyatý zorunludur.")]
+        [Range(1, 50000, ErrorMessage = "Fiyat 1 ile 50.000 arasýnda olmalýdýr.")]
         public double Price { get; set; }
+
+        [Required(ErrorMessage = "Lütfen bir kategori seçiniz.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Geçerli bir kategori seçiniz.")]
         public int CategoryId { get; set; }
 
+        
         public List<IFormFile>? ImageFiles { get; set; }
     }
 }

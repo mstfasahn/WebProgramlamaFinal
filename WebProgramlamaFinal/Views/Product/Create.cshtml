@@ -1,17 +1,19 @@
-@using WPF.MVC.ViewModels.Product
 @model CreateProductVM
 
 <div class="card shadow border-0 my-4">
-    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+    <div class="card-header bg-secondary bg-gradient py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Ürün Oluþtur</h2>
+                <h2 class="text-white py-2">Yeni Ürün Oluþtur</h2>
             </div>
         </div>
     </div>
     <div class="card-body p-4">
         <form method="post" class="row" enctype="multipart/form-data">
             <div class="border p-3">
+                @* Tüm hatalarý toplu görmek için 'All' yaptýk *@
+                <div asp-validation-summary="All" class="text-danger"></div>
+
                 @* Baþlýk *@
                 <div class="form-floating py-2 col-12">
                     <input asp-for="CreateProductDto.Title" class="form-control border-0 shadow" />
@@ -19,10 +21,11 @@
                     <span asp-validation-for="CreateProductDto.Title" class="text-danger"></span>
                 </div>
 
-                @* Açýklama (Zengin Metin Editörü Gelecek) *@
+                @* Açýklama - TinyMCE yerine düz textarea *@
                 <div class="py-2 col-12">
-                    <label asp-for="CreateProductDto.Description" class="ms-2 text-muted">Açýklama</label>
-                    <textarea asp-for="CreateProductDto.Description" class="form-control border-0 shadow"></textarea>
+                    <label asp-for="CreateProductDto.Description" class="ms-2 text-muted small">Ürün Açýklamasý</label>
+                    <textarea asp-for="CreateProductDto.Description" class="form-control border-0 shadow" rows="4"></textarea>
+                    <span asp-validation-for="CreateProductDto.Description" class="text-danger"></span>
                 </div>
 
                 <div class="row">
@@ -43,13 +46,13 @@
                 <div class="row">
                     @* Liste Fiyatý *@
                     <div class="form-floating py-2 col-md-6">
-                        <input asp-for="CreateProductDto.ListPrice" class="form-control border-0 shadow" />
+                        <input asp-for="CreateProductDto.ListPrice" type="number" step="0.01" class="form-control border-0 shadow" />
                         <label asp-for="CreateProductDto.ListPrice" class="ms-2">Liste Fiyatý</label>
                         <span asp-validation-for="CreateProductDto.ListPrice" class="text-danger"></span>
                     </div>
                     @* Satýþ Fiyatý *@
                     <div class="form-floating py-2 col-md-6">
-                        <input asp-for="CreateProductDto.Price" class="form-control border-0 shadow" />
+                        <input asp-for="CreateProductDto.Price" type="number" step="0.01" class="form-control border-0 shadow" />
                         <label asp-for="CreateProductDto.Price" class="ms-2">Satýþ Fiyatý</label>
                         <span asp-validation-for="CreateProductDto.Price" class="text-danger"></span>
                     </div>
@@ -57,7 +60,9 @@
 
                 @* Kategori Seçimi *@
                 <div class="form-floating py-2 col-12">
-                    <select asp-for="CreateProductDto.CategoryId" asp-items="@Model.Categories.Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })" class="form-select border-0 shadow">
+                    <select asp-for="CreateProductDto.CategoryId"
+                            asp-items="@Model.Categories.Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })"
+                            class="form-select border-0 shadow">
                         <option disabled selected>-- Kategori Seçiniz --</option>
                     </select>
                     <label asp-for="CreateProductDto.CategoryId" class="ms-2">Kategori</label>
@@ -65,17 +70,18 @@
                 </div>
 
                 @* Çoklu Resim Yükleme *@
-                <div class="form-floating py-2 col-12">
-                    <input type="file" name="ImageFiles" class="form-control border-0 shadow" multiple />
-                    <label class="ms-2">Ürün Resimleri</label>
+                <div class="py-2 col-12">
+                    <label class="ms-2 text-muted small">Ürün Resimleri</label>
+                    <input type="file" asp-for="CreateProductDto.ImageFiles" class="form-control border-0 shadow" multiple />
+                    <span asp-validation-for="CreateProductDto.ImageFiles" class="text-danger"></span>
                 </div>
 
                 <div class="row pt-2">
                     <div class="col-6 col-md-3">
-                        <button type="submit" class="btn btn-primary form-control">Oluþtur</button>
+                        <button type="submit" class="btn btn-primary form-control shadow">Oluþtur</button>
                     </div>
                     <div class="col-6 col-md-3">
-                        <a asp-action="Index" class="btn btn-outline-primary border form-control">Vazgeç</a>
+                        <a asp-action="Index" class="btn btn-outline-secondary border form-control shadow">Vazgeç</a>
                     </div>
                 </div>
             </div>
@@ -84,13 +90,5 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>
-        tinymce.init({
-            selector: 'textarea',
-            plugins: 'lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table code help wordcount',
-            toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-        });
-    </script>
     <partial name="_ValidationScriptsPartial" />
 }

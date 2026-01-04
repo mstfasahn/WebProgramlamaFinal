@@ -34,14 +34,14 @@ namespace WPF.Services.Services
                 foreach (var file in dto.ImageFiles)
                 {
                     // Benzersiz isim oluþtur (Guid)
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string productPath = Path.Combine(wwwRootPath, @"images\products\product-" + product.Id);
+                    string productFolderName = "product-" + product.Id;
+                    string productPath = Path.Combine(wwwRootPath, "images", "products", productFolderName);
 
                     // Klasör yoksa oluþtur
                     if (!Directory.Exists(productPath))
                         Directory.CreateDirectory(productPath);
 
-                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    using (var fileStream = new FileStream(Path.Combine(productPath, productFolderName), FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
                     }
@@ -49,7 +49,7 @@ namespace WPF.Services.Services
                     // ProductImage tablosuna kaydet
                     var productImage = new ProductImage
                     {
-                        ImageUrl = @"\images\products\product-" + product.Id + @"\" + fileName,
+                        ImageUrl = @"\images\products\product-" + product.Id + @"\" + productFolderName,
                         ProductId = product.Id
                     };
                     await dbContext.ProductImages.AddAsync(productImage);
@@ -60,21 +60,22 @@ namespace WPF.Services.Services
 
         public async Task<IEnumerable<GetProductDto>> GetManagementProductsAsync(int currentUserId, int roleId)
         {
-            if (roleId != (int)UserRole.Admin || roleId != (int)UserRole.BusinessAccount)
+            if (roleId != (int)UserRole.Admin && roleId != (int)UserRole.BusinessAccount)
             {
                 return Enumerable.Empty<GetProductDto>();
             }
-            if (roleId == (int)UserRole.Admin)
+
+            var query = dbContext.Products
+                    .Include(p => p.Category)
+                    .Include(p => p.ProductImages)
+                    .AsNoTracking();
+
+            if (roleId != (int)UserRole.Admin)
             {
-                var products = await GetAllPublicProductsAsync();
-                return products;
+                query = query.Where(p => p.UserId == currentUserId);
             }
-            var userproducts = await dbContext.Products
-                .Where(p => p.UserId == currentUserId)
-                .Include(p => p.Category)
-                .Include(p => p.ProductImages)
-                .ToListAsync();
-            var getProductDtos = mapper.Map<IEnumerable<GetProductDto>>(userproducts);
+            var products = await query.ToListAsync();
+            var getProductDtos = mapper.Map<IEnumerable<GetProductDto>>(products);
             return getProductDtos;
         }
 

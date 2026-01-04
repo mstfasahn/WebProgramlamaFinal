@@ -12,7 +12,7 @@ namespace WPF.Models.Dtos.User
         public string? Email { get; set; }
 
         [Required(ErrorMessage = "Þifre zorunludur.")]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "Þifre en az 6 karakter olmalýdýr.")]
+        [StringLength(20, MinimumLength = 5, ErrorMessage = "Þifre en az 5 karakter olmalýdýr.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }

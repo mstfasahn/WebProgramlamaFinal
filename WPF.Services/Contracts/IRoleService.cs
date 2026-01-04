@@ -1,9 +1,10 @@
+using WPF.Models.Dtos.Role;
 using WPF.Models.Entities;
 
 namespace WPF.Services.Contracts
 {
     public interface IRoleService
     {
-        Task<IEnumerable<Role>> GetRoles();
+        Task<IEnumerable<GetRoleDto>> GetRolesAsync();
     }
 }

@@ -8,9 +8,11 @@ using WPF.Services.Services;
 
 namespace WPF.MVC.Controllers
 {
-    //[ServiceFilter(typeof(PermissionControlAttribute))]
+    [ServiceFilter(typeof(PermissionControlAttribute))]
     public class CategoryController
-        (ICategoryService categoryService,IMapper mapper,IUserLogginService logginService) : BaseController(logginService)
+        (ICategoryService categoryService,
+        IMapper mapper,
+        IUserLogginService logginService) : BaseController(logginService)
     {
         [HttpGet]
         public async Task<IActionResult> List()

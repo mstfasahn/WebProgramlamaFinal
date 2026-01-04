@@ -11,5 +11,6 @@ namespace WPF.Services.Contracts
         Task<IEnumerable<ListCityDto>> GetListCitiesWIncludesAsync();
         Task<IEnumerable<ListCityDto>> SearchCity(string? postalCode, string? name, int? countryId);
         Task<GetCityDto> UpdateCityAsync(UpdateCityDto dto);
+
     }
 }
