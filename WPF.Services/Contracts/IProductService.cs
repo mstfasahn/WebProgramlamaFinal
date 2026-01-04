@@ -8,6 +8,7 @@ namespace WPF.Services.Contracts
         Task<bool> DeleteProductAsync(int id, int userId, int RoleId);
         Task<IEnumerable<GetProductDto>> GetAllPublicProductsAsync();
         Task<IEnumerable<GetProductDto>> GetManagementProductsAsync(int currentUserId, int roleId);
+        Task<GetProductDto> GetProductByIdAsync(int productId);
         Task<UpdateProductDto> GetProductForUpdateAsync(int id, int userId, int roleId);
         Task UpdateProductAsync(UpdateProductDto dto);
     }

@@ -139,7 +139,7 @@ namespace WPF.MVC.Controllers
         }
         
         [HttpPost("Delete/{id:int}")]
-        [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Delete(int id)
         {
             var userJson = HttpContext.Session.GetString("CurrentUser");

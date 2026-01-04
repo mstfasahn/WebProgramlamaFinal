@@ -86,6 +86,10 @@ namespace WPF.Data
                 .WithMany() // Eðer User içinde ICollection<Product> varsa buraya p => p.Products yazabilirsin
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ShoppingCart>()
+                .HasIndex(c => new { c.UserId, c.ProductId })
+                .IsUnique();
         }
     }
     }

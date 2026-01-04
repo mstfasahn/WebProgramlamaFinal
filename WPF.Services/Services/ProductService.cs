@@ -19,6 +19,14 @@ namespace WPF.Services.Services
         IMapper mapper,
         IWebHostEnvironment _webHostEnvironment) : IProductService
     {
+
+        public async Task<GetProductDto> GetProductByIdAsync(int productId)
+        {
+            var product = await dbContext.Products.FindAsync(productId);
+            if (product == null) { return new GetProductDto(); }
+            var getProductDto =mapper.Map<GetProductDto>(product);
+            return getProductDto;
+        }
         public async Task CreateProductAsync(CreateProductDto dto, int currentUserId)
         {
             var product = mapper.Map<Product>(dto);

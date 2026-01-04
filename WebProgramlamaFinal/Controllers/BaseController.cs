@@ -53,5 +53,16 @@ namespace WPF.MVC.Controllers
             Response.StatusCode = 403;
             return RedirectToAction("Login", "User");
         }
+        protected IActionResult RedirectToCart()
+        {
+            return RedirectToAction("MyCart", "ShoppingCart");
+        }
+        protected IActionResult RedirectToPublicProductList()
+        {
+            return RedirectToAction("PublicList", "Product");
+
+        }
+        protected GetUserDto CurrentUser =>
+        JsonConvert.DeserializeObject<GetUserDto>(HttpContext.Session.GetString("CurrentUser"));
     }
 }

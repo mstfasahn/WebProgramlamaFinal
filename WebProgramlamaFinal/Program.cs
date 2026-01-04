@@ -35,6 +35,7 @@ builder.Services.AddScoped<IEndpointServices, EndpointServices>();
 builder.Services.AddScoped<ICityServices,CityServices>();
 builder.Services.AddScoped<IStateServices, StateServices>();
 builder.Services.AddScoped<IPermissionServices, PermissionServices>();
+builder.Services.AddScoped<IShoppingCartServices, ShoppingCartServices>();
 builder.Services.AddScoped<PermissionControlAttribute>();
 var app = builder.Build();
 

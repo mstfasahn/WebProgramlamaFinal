@@ -28,9 +28,13 @@
                                     </p>
                                 </div>
                             </div>
+
                             <div>
-                                <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary bg-gradient border-0 form-control">
-                                    Detaylar
+                                <a asp-controller="ShoppingCart"
+                                   asp-action="AddAndRedirect"
+                                   asp-route-productId="@product.Id"
+                                   class="btn btn-primary bg-gradient border-0 form-control">
+                                    <i class="bi bi-cart-plus"></i> Sepete Ekle
                                 </a>
                             </div>
                         </div>

@@ -1,0 +1,127 @@
+@model ListShoppingCartVM
+
+@{
+    ViewData["Title"] = "Sepetim";
+}
+
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary bg-gradient text-white py-3">
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <h4 class="mb-0"><i class="bi bi-cart-fill me-2"></i>Alýþveriþ Sepetiniz</h4>
+                </div>
+                <div class="col-6 text-end">
+                    <a asp-controller="Product" asp-action="PublicList" class="btn btn-outline-light btn-sm">Alýþveriþe Devam Et</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4">
+            @if (Model.CartItems != null && Model.CartItems.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr class="text-secondary small text-uppercase">
+                                <th>Ürün Bilgisi</th>
+                                <th class="text-center">Birim Fiyat</th>
+                                <th class="text-center">Adet</th>
+                                <th class="text-end">Satýr Toplamý</th>
+                                <th class="text-center">Ýþlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CartItems)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/images/no-image.png" : item.ImageUrl)"
+                                                 class="rounded shadow-sm me-3" width="70" height="70" style="object-fit: cover;" />
+                                            <div>
+                                                <h6 class="mb-1 fw-bold text-dark">@item.ProductName</h6>
+                                                <small class="text-muted">Ürün Kodu: #@item.ProductId</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center fw-semibold">@item.Price.ToString("C2")</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center">
+                                            <div class="input-group input-group-sm shadow-sm" style="width: 120px;">
+                                                
+                                                @* Eksi Butonu: countChange = -1 *@
+                                                <a asp-action="UpdateQuantity" 
+                                                   asp-route-productId="@item.ProductId" 
+                                                   asp-route-countChange="-1"
+                                                   class="btn btn-white border-secondary">
+                                                    <i class="bi bi-dash-lg"></i>
+                                                </a>
+
+                                                <input type="text" class="form-control text-center border-secondary fw-bold"
+                                                       value="@item.Count" readonly />
+
+                                                @* Artý Butonu: countChange = 1 *@
+                                                <a asp-action="UpdateQuantity" 
+                                                   asp-route-productId="@item.ProductId" 
+                                                   asp-route-countChange="1"
+                                                   class="btn btn-white border-secondary">
+                                                    <i class="bi bi-plus-lg"></i>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end fw-bold text-primary">
+                                        @((item.Price * item.Count).ToString("C2"))
+                                    </td>
+                                    <td class="text-center">
+                                        @* Çöp Kutusu: countChange = -1000 (Direkt silmesi için büyük eksi deðer) *@
+                                        <a asp-action="UpdateQuantity" 
+                                           asp-route-productId="@item.ProductId" 
+                                           asp-route-countChange="-1001"
+                                           class="btn btn-link text-danger p-0">
+                                            <i class="bi bi-trash3-fill fs-5"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-md-7">
+                        <div class="p-3 bg-light rounded border border-dashed">
+                            <h6 class="fw-bold"><i class="bi bi-info-circle me-2 text-primary"></i>Bilgilendirme</h6>
+                            <p class="small text-muted mb-0">Ürün adetlerini güncellediðinizde sepet toplamýnýz anlýk olarak hesaplanýr.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card border-0 bg-light p-4">
+                            <div class="d-flex justify-content-between mb-3 border-top pt-3">
+                                <span class="h5 mb-0">Genel Toplam:</span>
+                                <span class="h5 mb-0 text-primary fw-bolder">@Model.OrderTotal.ToString("C2")</span>
+                            </div>
+                            <a asp-action="Summary" class="btn btn-success btn-lg w-100 shadow mt-3 py-3 fw-bold">
+                                SÝPARÝÞÝ TAMAMLA <i class="bi bi-arrow-right-circle ms-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="bi bi-cart-x display-1 text-muted opacity-25"></i>
+                    </div>
+                    <h3 class="fw-light text-secondary">Sepetiniz boþ.</h3>
+                    <a asp-controller="Product" asp-action="PublicList" class="btn btn-primary px-5 py-2 mt-3 rounded-pill">
+                        ALIÞVERÝÞE BAÞLA
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
