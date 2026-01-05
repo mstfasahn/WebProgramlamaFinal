@@ -43,7 +43,7 @@ namespace WPF.MVC.Filters
             if (!hasPermission)
             {
                 // Index yerine AccessDenied sayfasýna gönderiyoruz
-                context.Result = new RedirectToActionResult("AccessDenied", "User", null);
+                context.Result = new RedirectToActionResult("AccessDenied", "Home", null);
                 return;
             }
 

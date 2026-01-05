@@ -12,7 +12,7 @@ namespace WPF.MVC.Controllers
 {
     public class BaseController(IUserLogginService loggingService) : Controller
     {
-        // "Executing" deðil "Execution" olmalý
+        // "Executing" deðil "Execution" olmalý çünkü async programlýyoruz.
         public override async Task OnActionExecutionAsync(ActionExecutingContext filterContext, ActionExecutionDelegate next)
         {
             var ReqController = filterContext.RouteData.Values["controller"]?.ToString();
@@ -60,6 +60,11 @@ namespace WPF.MVC.Controllers
         protected IActionResult RedirectToPublicProductList()
         {
             return RedirectToAction("PublicList", "Product");
+
+        }
+        protected IActionResult RedirectToCategoryList()
+        {
+            return RedirectToAction("List","Category");
 
         }
         protected GetUserDto CurrentUser =>

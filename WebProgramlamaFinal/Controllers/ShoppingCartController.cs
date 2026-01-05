@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using WPF.Models.Dtos.ShoppingCart;
 using WPF.Models.Dtos.User;
+using WPF.MVC.Filters;
 using WPF.MVC.ViewModels.ShoppingCart;
 using WPF.Services.Contracts;
 
 namespace WPF.MVC.Controllers
 {
+    [ServiceFilter(typeof(PermissionControlAttribute))]
     public class ShoppingCartController
         (
         IShoppingCartServices cartServices,

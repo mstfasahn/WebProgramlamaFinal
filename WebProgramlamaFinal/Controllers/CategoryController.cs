@@ -24,7 +24,7 @@ namespace WPF.MVC.Controllers
         public async Task<IActionResult> Search(string categoryName)
         {
             var category = await categoryService.GetCategoryBySearchAsync(categoryName);
-            return View("List",category);
+            return RedirectToCategoryList();
 
         }
         [HttpGet]
@@ -35,13 +35,13 @@ namespace WPF.MVC.Controllers
         {
             if (dto == null) { return View(dto); }
             var category = await categoryService.CreateCategoryAsync(dto);
-            return RedirectToAction("List", "Category");
+            return RedirectToCategoryList();
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id) 
         {
-            if (id == 0) { return View("List", "Category"); }
+            if (id == 0) { return RedirectToCategoryList(); }
             var category =await categoryService.GetCategoryByIdAsync(id);
             var updateCategoryDto = mapper.Map<UpdateCategoryDto>(category);
             return View(updateCategoryDto);
@@ -53,14 +53,14 @@ namespace WPF.MVC.Controllers
             if (!ModelState.IsValid) return View(dto);
 
             await categoryService.UpdateCategoryAsync(dto);
-            return RedirectToAction("List", "Category");
+            return RedirectToCategoryList();
         }
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (id == 0) { RedirectToAction("List", "Category"); }
+            if (id == 0) { RedirectToCategoryList(); }
             await categoryService.DeleteCategoryAsync(id);
-            return RedirectToAction("List");
+            return RedirectToCategoryList();
         }
     }
 }
